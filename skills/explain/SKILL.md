@@ -106,6 +106,21 @@ print(s.getTable(limit=1).tableTex())
 - `stop_at_error: false` (theory default) silently returns `-inf` on theory failure
 - `renames: mnu` lets one parameter answer to multiple names (cosmology mappings between CAMB and CLASS)
 - For CMB use `theta_MC_100` or `theta` rather than sampling `H0` directly when comparing to Planck
+- **Cwd-collision footgun for editable cobaya installs.** If you have a local clone of cobaya at `<dir>/cobaya/` and run python from `<dir>`, Python's PEP 420 namespace-package machinery treats `cobaya` as an empty namespace package shadowing the editable install. Symptoms: `cobaya.__file__` is `None`, `dir(cobaya)` is empty, `from cobaya import LoggedError` fails, and downstream packages (e.g. soliket) blow up on import. Fix: `cd` somewhere without a `cobaya/` subdir (`/tmp`, your workdir, etc.) before invoking python or cobaya-run.
+
+## Recipe — rebase a reference YAML to a local workdir
+
+Common scenario: a known-good YAML from another machine has absolute paths that don't exist locally. To make it runnable in a self-contained workdir:
+
+1. Copy the YAML into `<workdir>/reference/<name>.yaml` as a read-only baseline.
+2. Make a runnable copy at `<workdir>/reference/<name>.local.yaml`.
+3. Rewrite paths in the copy:
+   - data dirs → `<workdir>/data/`
+   - external module refs (likelihood, theory) → either install the module or vendor a standalone replacement at `<workdir>/<module>.py` and update the dotted ref
+   - sampler `covmat:` → drop it, or point at a covmat copied into `<workdir>/reference/`
+   - `output:` → `<workdir>/chains/<name>.local`
+4. `cd <workdir>` before running so vendored modules are importable.
+5. `cobaya-run --test <…>.local.yaml` first — catches all path/import errors in seconds; then run for real.
 
 ## Going deeper
 For full YAML schema, all sampler options, PolyChord nested sampling, Planck likelihood module names, and `Provider` API see [reference.md](reference.md).
