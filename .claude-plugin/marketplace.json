@@ -1,0 +1,19 @@
+{
+  "name": "cobaya-claude-plugin",
+  "owner": {
+    "name": "Boris Bolliet",
+    "email": "boris.bolliet@gmail.com",
+    "url": "https://github.com/borisbolliet"
+  },
+  "plugins": [
+    {
+      "name": "cobaya",
+      "source": "./plugins/cobaya",
+      "description": "Cobaya cosmological Bayesian-analysis framework assistant: scaffolding YAML inputs, theory/likelihood wiring (CAMB, CLASS, classy_szlite), MPI MCMC runs, getdist post-processing, debugging convergence (Rminus1) and acceptance issues.",
+      "version": "0.2.1",
+      "category": "science",
+      "tags": ["cobaya", "cosmology", "mcmc", "bayesian", "camb", "class", "planck"],
+      "homepage": "https://github.com/borisbolliet/cobaya-claude-plugin"
+    }
+  ]
+}
