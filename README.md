@@ -10,15 +10,26 @@ Specialized [Claude Code](https://code.claude.com) assistance for the [Cobaya](h
 
 ## Install
 
-Local testing (no marketplace needed):
-```bash
-claude --plugin-dir ~/GitHub/cobaya-claude-plugin
+In any Claude Code session, run these three commands:
+
+```
+/plugin marketplace add https://github.com/borisbolliet/cobaya-claude-plugin.git
+/plugin install cobaya@cobaya-claude-plugin
+/reload-plugins
 ```
 
-From a marketplace (once published):
+After `/reload-plugins`, `/cobaya:explain` and `/cobaya:setup-run`
+show in `/help` and the `cobaya-engineer` subagent appears in the
+Agent picker.
+
+To update later (after I push a new commit):
+
 ```
-/plugin marketplace add <owner>/<marketplace-repo>
-/plugin install cobaya@<marketplace-name>
+/plugin uninstall cobaya@cobaya-claude-plugin
+/plugin marketplace remove cobaya-claude-plugin
+/plugin marketplace add https://github.com/borisbolliet/cobaya-claude-plugin.git
+/plugin install cobaya@cobaya-claude-plugin
+/reload-plugins
 ```
 
 ## Try it
@@ -33,15 +44,17 @@ What's the right covmat strategy for a Planck+lensing chain?
 ## Layout
 
 ```
-.claude-plugin/plugin.json    # manifest
-skills/
-  explain/
-    SKILL.md                  # main knowledge skill
-    reference.md              # detailed schema (loaded on demand)
-  setup-run/
-    SKILL.md                  # forks into cobaya-engineer
-agents/
-  cobaya-engineer.md          # the subagent
+.claude-plugin/marketplace.json   # single-plugin marketplace
+plugins/cobaya/
+  .claude-plugin/plugin.json      # plugin manifest
+  skills/
+    explain/
+      SKILL.md                    # main knowledge skill
+      reference.md                # detailed schema (loaded on demand)
+    setup-run/
+      SKILL.md                    # forks into cobaya-engineer
+  agents/
+    cobaya-engineer.md            # the subagent
 ```
 
 ## Notes / open items
